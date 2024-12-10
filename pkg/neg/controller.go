@@ -560,10 +560,49 @@ func (c *Controller) processService(key string) error {
 	}
 	if len(svcPortInfoMap) != 0 {
 		c.logger.V(2).Info("Syncing service", "service", key)
+
 		// TODO(cheungdavid): Remove this validation when single stack ipv6 endpoint is supported
-		if service.Spec.Type != apiv1.ServiceTypeLoadBalancer && isSingleStackIPv6Service(service) {
+		/*if service.Spec.Type != apiv1.ServiceTypeLoadBalancer && isSingleStackIPv6Service(service) {
 			return fmt.Errorf("NEG is not supported for ipv6 only service (%T)", service)
+		}*/
+
+		if !flags.F.EnableIPV6NEG { // Add your own, default to false so will hit in prod, unless set in staging tests...
+			// find even tests
+			if service.Spec.Type != apiv1.ServiceTypeLoadBalancer && isSingleStackIPv6Service(service) {
+				return fmt.Errorf("NEG is not supported for ipv6 only service (%T)", service)
+			}
 		}
+
+		// I don't know what either of these two things mean...
+
+		// How to build it? Run unit tests but after to run manual
+
+		// You need an actual GKE Cluster, and then how to verify NEG's are created?
+
+		// Make the change delete this line
+
+		// Run unit tests - install docker locally I prefer to do it with local powerful hardware
+		// (and I'm assuming write your own)
+
+		// Run e2e tests? See if those work and play around?
+
+		// Run manual tests in GKE Cluster - GKE Sandbox, I'm assuming just manually see if a NEG was created (but no IPV6 NEG)...
+
+		// 1. Add an IPV6 only service in a running GKE Cluster in Sandbox
+		// Deploy this controller to that...this will be a brand new skill...
+
+		// Manually verify some NEG is created?
+
+		// Create a single stack IPv6 cluster in GKE Sandbox
+		// built on top of dual-stack GCE VMs, using a GKE Sandbox
+
+		// Can't do full e2e since required IPV6 in GCE Prod
+
+		// So I guess with the change, deploy it onto an IPV6 GKE Sandbox (need sandbox to make it IPV6)
+		// And see if IPV6 network endpoint groups are created from service? How do I see that? Make sure it works?
+
+		// Service pod and endpoint slice?
+
 		if err = c.syncNegStatusAnnotation(namespace, name, svcPortInfoMap); err != nil {
 			return err
 		}
@@ -1022,3 +1061,8 @@ func isSingleStackIPv6Service(service *apiv1.Service) bool {
 	}
 	return false
 }
+
+// Deploy it on a created GKE cluster, see if it creates NEG's and do barebones?
+
+// And then see if you can create IPV6 only NEG's (does that come with GKE
+// Cluster creation?)

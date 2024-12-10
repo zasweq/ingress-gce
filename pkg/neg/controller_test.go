@@ -1513,6 +1513,7 @@ func TestServiceIPFamilies(t *testing.T) {
 			ipFamilyPolicy: &singleStack,
 			expectNil:      false,
 		},
+		// It's not a bool flip anymore need to set flag and see if it errors...
 		{
 			desc:           "ipv4 only service with l7 load balancer, ipFamilyPolicy is singleStack",
 			serviceType:    v1.ServiceTypeClusterIP,

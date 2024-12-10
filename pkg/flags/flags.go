@@ -141,6 +141,7 @@ var F = struct {
 	EnableMultiProjectMode                   bool
 	MultiProjectCRDProjectNameLabel          string
 	EnableL4MixedProtocol                    bool
+	EnableIPV6NEG                            bool
 }{
 	GCERateLimitScale: 1.0,
 }
@@ -330,6 +331,7 @@ L7 load balancing. CSV values accepted. Example: -node-port-ranges=80,8080,400-5
 	flag.BoolVar(&F.EnableMultiProjectMode, "enable-multi-project-mode", false, "Enable running in multi-project mode.")
 	flag.StringVar(&F.MultiProjectCRDProjectNameLabel, "multi-project-crd-project-name-label", "", "The label key for project name of Project in a Project CRD in the Multi-Project cluster.")
 	flag.BoolVar(&F.EnableL4MixedProtocol, "enable-l4-mixed-protocol", false, "Enable support for mixed protocol L4 load balancers.")
+	flag.BoolVar(&F.EnableIPV6, "enable-ipv6-neg", false, "Enable support for IPV6 NEG's.") // only set in staging tests..m
 }
 
 func Validate() {
